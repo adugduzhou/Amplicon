@@ -32,7 +32,7 @@ parseArgs <- function(scriptname, ARGS, OPTS=NULL) {
     stop("Error: OPTS must have length divisable by 4") # args for users: name, type, default value, description
   ARGS <- matrix(ARGS, nrow=length(ARGS)/3, ncol=3, byrow=T, dimnames=list(c(),c("name","type","description")))
   OPTS <- if (!is.null(OPTS)) matrix(OPTS, nrow=length(OPTS)/4, ncol=4, byrow=T, dimnames=list(c(),c("name","type","default","description")))
-
+    
   ARGV <- commandArgs(trailingOnly=T)
   
   catargs <- paste(ARGS[,"name"],ARGS[,"description"],sep=" - ",collapse="\n")
@@ -66,7 +66,7 @@ parseArgs <- function(scriptname, ARGS, OPTS=NULL) {
     if (is.null(OPTS) || ! opt[1] %in% OPTS[,"name"])
       stop("optional argument ",opt[1]," not recognized\n",usage)
     idx <- match(opt[1],OPTS[,"name"])
-    cmd <- paste(opt[1],"<-as.",OPTS[idx,"type"],"(\"",opt[2],"\")",sep="")
+    cmd <- paste(opt[1],"<<-as.",OPTS[idx,"type"],"(\"",opt[2],"\")",sep="")
     eval(parse(text=cmd))
   }
 }

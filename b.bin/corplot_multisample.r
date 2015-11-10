@@ -6,11 +6,11 @@ if (commandArgs()[1] != "RStudio") {
    )
     
     OPTS <- c(
+        "logval","logical",F,"take log2 of values, T or F"
     )
     
-    argv <- commandArgs(trailingOnly = FALSE)
     source("/Users/zhoudu/Projects/Feilong/b.bin/Rsub.R")
-    parseArgs("Corplot_multipanel.R", ARGS, OPTS)
+    parseArgs("corplot_multisample.r", ARGS, OPTS)
     samplelabels <- unlist(strsplit(labellist,","))
 
 } else {
@@ -21,10 +21,12 @@ if (commandArgs()[1] != "RStudio") {
 }
 
 require("RColorBrewer") ## from CRAN
-
 # Load values
-c <- log2(read.table(input, header=T, row.names=1))
-c[c < 0] <- NA
+c <- read.table(input, header=T, row.names=1)
+if (logval){
+    c <- log2(c)
+    c[c == -Inf] <- NA
+}
 
 # panel plot function
 panel.plot <- function( x,y, ... )
