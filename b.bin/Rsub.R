@@ -26,13 +26,13 @@ bedCount <- function(x,df) {
 
 
 parseArgs <- function(scriptname, ARGS, OPTS=NULL) {
-  if (length(ARGS) %% 3 != 0)
+  if (length(ARGS) %% 3 != 0)   # args for users: name, type, description
     stop("Error: ARGS must have length divisable by 3")
   if (!is.null(OPTS) && length(OPTS) %% 4 != 0)
-    stop("Error: OPTS must have length divisable by 4")
+    stop("Error: OPTS must have length divisable by 4") # args for users: name, type, default value, description
   ARGS <- matrix(ARGS, nrow=length(ARGS)/3, ncol=3, byrow=T, dimnames=list(c(),c("name","type","description")))
   OPTS <- if (!is.null(OPTS)) matrix(OPTS, nrow=length(OPTS)/4, ncol=4, byrow=T, dimnames=list(c(),c("name","type","default","description")))
-  
+
   ARGV <- commandArgs(trailingOnly=T)
   
   catargs <- paste(ARGS[,"name"],ARGS[,"description"],sep=" - ",collapse="\n")
@@ -44,7 +44,7 @@ parseArgs <- function(scriptname, ARGS, OPTS=NULL) {
     stop("Not enough arguments.\n",usage)
   
   types <- c("character","numeric","integer","logical")
-  
+ 
   for (i in 1:nrow(ARGS)) {
     if (! ARGS[i,"type"] %in% types)
       stop("Unrecognized argument type ",ARGS[i,"type"]," for argument ",ARGS[i,"name"],"\n",usage)
@@ -66,7 +66,7 @@ parseArgs <- function(scriptname, ARGS, OPTS=NULL) {
     if (is.null(OPTS) || ! opt[1] %in% OPTS[,"name"])
       stop("optional argument ",opt[1]," not recognized\n",usage)
     idx <- match(opt[1],OPTS[,"name"])
-    cmd <- paste(opt[1],"<<-as.",OPTS[idx,"type"],"(\"",opt[2],"\")",sep="")
+    cmd <- paste(opt[1],"<-as.",OPTS[idx,"type"],"(\"",opt[2],"\")",sep="")
     eval(parse(text=cmd))
   }
 }
